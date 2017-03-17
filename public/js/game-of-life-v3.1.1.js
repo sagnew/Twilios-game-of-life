@@ -1164,15 +1164,11 @@ allDeadNeighbours[key].i++;
     },
 
     addNewPattern: function(patternMessage) {
-      var testStr = "↵";
       var msgArray = patternMessage.split(/\s/);
 
       var i, j;
       var rowOffset = Math.floor(Math.random() * this.rows - msgArray[0].length);
       var colOffset = Math.floor(Math.random() * this.columns - msgArray.length);
-
-      console.log(rowOffset);
-      console.log(colOffset);
 
       for (i = 0; i < msgArray.length; i += 1) {
         for (j = 0; j < msgArray[i].length; j += 1) {
