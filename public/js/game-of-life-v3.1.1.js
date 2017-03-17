@@ -6,11 +6,14 @@
  * 04/Sep/2010
  */
 
-var GOL = {
+// (function () {
+  var socket = io();
+
+  var GOL = {
 
     columns : 0,
     rows : 0,
-  
+
     waitTime: 100,
     generation : 0,
 
@@ -57,21 +60,21 @@ var GOL = {
       current : 0,
 
       schemes : [
-      {
-        color : '#F3F3F3'
-      },
+        {
+          color : '#F3F3F3'
+        },
 
-      {
-        color : '#FFFFFF'
-      },
+        {
+          color : '#FFFFFF'
+        },
 
-      {
-        color : '#666666'
-      },
+        {
+          color : '#666666'
+        },
 
-      {
-        color : '' // Special case: 0px grid
-      }
+        {
+          color : '' // Special case: 0px grid
+        }
       ]
     },
 
@@ -82,24 +85,24 @@ var GOL = {
       schedule : false,
 
       schemes : [
-      // { columns : 100, rows : 48, cellSize : 8 },
-      {
-        columns : 180,
-        rows : 86,
-        cellSize : 4
-      },
+        // { columns : 100, rows : 48, cellSize : 8 },
+        {
+          columns : 180,
+          rows : 86,
+          cellSize : 4
+        },
 
-      {
-        columns : 300,
-        rows : 144,
-        cellSize : 2
-      },
+        {
+          columns : 300,
+          rows : 144,
+          cellSize : 2
+        },
 
-      {
-        columns : 450,
-        rows : 432,
-        cellSize : 3
-      }
+        {
+          columns : 450,
+          rows : 432,
+          cellSize : 3
+        }
       ]
     },
 
@@ -110,86 +113,86 @@ var GOL = {
       schedule : false,
 
       schemes : [
-      {
-        dead : '#FFFFFF',
-        trail : ['#B5ECA2'],
-        alive : ['#9898FF', '#8585FF', '#7272FF', '#5F5FFF', '#4C4CFF', '#3939FF', '#2626FF', '#1313FF', '#0000FF', '#1313FF', '#2626FF', '#3939FF', '#4C4CFF', '#5F5FFF', '#7272FF', '#8585FF']
-      },
+        {
+          dead : '#FFFFFF',
+          trail : ['#B5ECA2'],
+          alive : ['#9898FF', '#8585FF', '#7272FF', '#5F5FFF', '#4C4CFF', '#3939FF', '#2626FF', '#1313FF', '#0000FF', '#1313FF', '#2626FF', '#3939FF', '#4C4CFF', '#5F5FFF', '#7272FF', '#8585FF']
+        },
 
-      {
-        dead : '#FFFFFF',
-        trail : ['#EE82EE', '#FF0000', '#FF7F00', '#FFFF00', '#008000 ', '#0000FF', '#4B0082'],
-        alive : ['#FF0000', '#FF7F00', '#FFFF00', '#008000 ', '#0000FF', '#4B0082', '#EE82EE']
-      },
+        {
+          dead : '#FFFFFF',
+          trail : ['#EE82EE', '#FF0000', '#FF7F00', '#FFFF00', '#008000 ', '#0000FF', '#4B0082'],
+          alive : ['#FF0000', '#FF7F00', '#FFFF00', '#008000 ', '#0000FF', '#4B0082', '#EE82EE']
+        },
 
-      {
-        dead : '#FFFFFF',
-        trail : ['#9898FF', '#8585FF', '#7272FF', '#5F5FFF', '#4C4CFF', '#3939FF', '#2626FF', '#1313FF', '#0000FF', '#1313FF', '#2626FF', '#3939FF', '#4C4CFF', '#5F5FFF', '#7272FF', '#8585FF'],
-        alive : ['#000000']
-      }
+        {
+          dead : '#FFFFFF',
+          trail : ['#9898FF', '#8585FF', '#7272FF', '#5F5FFF', '#4C4CFF', '#3939FF', '#2626FF', '#1313FF', '#0000FF', '#1313FF', '#2626FF', '#3939FF', '#4C4CFF', '#5F5FFF', '#7272FF', '#8585FF'],
+          alive : ['#000000']
+        }
 
       ]
     },
 
 
     /**
-         * On Load Event
-         */
-    init : function() {
-      try {
-        this.listLife.init();   // Reset/init algorithm
-        this.loadConfig();      // Load config from URL (autoplay, colors, zoom, ...)
-        this.loadState();       // Load state from URL
-        this.keepDOMElements(); // Keep DOM References (getElementsById)
-        this.canvas.init();     // Init canvas GUI
-        this.registerEvents();  // Register event handlers
-    
-        this.prepare();
-      } catch (e) {
-        alert("Error: "+e);
-      }
-    },
+     * On Load Event
+     */
+init : function() {
+         try {
+           this.listLife.init();   // Reset/init algorithm
+           this.loadConfig();      // Load config from URL (autoplay, colors, zoom, ...)
+           this.loadState();       // Load state from URL
+           this.keepDOMElements(); // Keep DOM References (getElementsById)
+           this.canvas.init();     // Init canvas GUI
+           this.registerEvents();  // Register event handlers
+
+           this.prepare();
+         } catch (e) {
+           alert("Error: "+e);
+         }
+       },
 
 
-    /**
-         * Load config from URL
-         */
-    loadConfig : function() {
-      var colors, grid, zoom;
+       /**
+        * Load config from URL
+        */
+loadConfig : function() {
+               var colors, grid, zoom;
 
-      this.autoplay = this.helpers.getUrlParameter('autoplay') === '1' ? true : this.autoplay;
-      this.trail.current = this.helpers.getUrlParameter('trail') === '1' ? true : this.trail.current;
+               this.autoplay = this.helpers.getUrlParameter('autoplay') === '1' ? true : this.autoplay;
+               this.trail.current = this.helpers.getUrlParameter('trail') === '1' ? true : this.trail.current;
 
-      // Initial color config
-      colors = parseInt(this.helpers.getUrlParameter('colors'), 10);
-      if (isNaN(colors) || colors < 1 || colors > GOL.colors.schemes.length) {
-        colors = 1;
-      }
+               // Initial color config
+               colors = parseInt(this.helpers.getUrlParameter('colors'), 10);
+               if (isNaN(colors) || colors < 1 || colors > GOL.colors.schemes.length) {
+                 colors = 1;
+               }
 
-      // Initial grid config
-      grid = parseInt(this.helpers.getUrlParameter('grid'), 10);
-      if (isNaN(grid) || grid < 1 || grid > GOL.grid.schemes.length) {
-        grid = 1;
-      }
+               // Initial grid config
+               grid = parseInt(this.helpers.getUrlParameter('grid'), 10);
+               if (isNaN(grid) || grid < 1 || grid > GOL.grid.schemes.length) {
+                 grid = 1;
+               }
 
-      // Initial zoom config
-      zoom = parseInt(this.helpers.getUrlParameter('zoom'), 10);
-      if (isNaN(zoom) || zoom < 1 || zoom > GOL.zoom.schemes.length) {
-        zoom = 1;
-      }
+               // Initial zoom config
+               zoom = parseInt(this.helpers.getUrlParameter('zoom'), 10);
+               if (isNaN(zoom) || zoom < 1 || zoom > GOL.zoom.schemes.length) {
+                 zoom = 1;
+               }
 
-      this.colors.current = colors - 1;
-      this.grid.current = grid - 1;
-      this.zoom.current = zoom - 1;
+               this.colors.current = colors - 1;
+               this.grid.current = grid - 1;
+               this.zoom.current = zoom - 1;
 
-      this.rows = this.zoom.schemes[this.zoom.current].rows;
-      this.columns = this.zoom.schemes[this.zoom.current].columns;
-    },
+               this.rows = this.zoom.schemes[this.zoom.current].rows;
+               this.columns = this.zoom.schemes[this.zoom.current].columns;
+             },
 
 
-    /**
-         * Load world state from URL parameter
-         */
+             /**
+              * Load world state from URL parameter
+              */
     loadState : function() {
       var state, i, j, y, s = this.helpers.getUrlParameter('s');
 
@@ -201,7 +204,7 @@ var GOL = {
         }
 
         state = jsonParse(decodeURI(s));
-          
+
         for (i = 0; i < state.length; i++) {
           for (y in state[i]) {
             for (j = 0 ; j < state[i][y].length ; j++) {
@@ -218,7 +221,7 @@ var GOL = {
      */
     randomState : function() {
       var i, liveCells = (this.rows * this.columns) * 0.12;
-      
+
       for (i = 0; i < liveCells; i++) {
         this.listLife.addCell(this.helpers.random(0, this.columns - 1), this.helpers.random(0, this.rows - 1), this.listLife.actualState);
       }
@@ -299,7 +302,7 @@ var GOL = {
       var i, x, y, r, liveCellNumber, algorithmTime, guiTime;
 
       // Algorithm run
-    
+
       algorithmTime = (new Date());
 
       liveCellNumber = this.listLife.nextGeneration();
@@ -422,7 +425,7 @@ var GOL = {
         if (!event) {
           event = window.event;
         }
-      
+
         if (event.keyCode === 67) { // Key: C
           GOL.handlers.buttons.clear();
         } else if (event.keyCode === 82 ) { // Key: R
@@ -434,7 +437,7 @@ var GOL = {
 
 
       buttons : {
-      
+
         /**
          * Button Handler - Run
          */
@@ -444,7 +447,7 @@ var GOL = {
           GOL.running = !GOL.running;
           if (GOL.running) {
             GOL.nextStep();
-            
+
             document.getElementById('buttonRun').value = 'Stop';
           } else {
             document.getElementById('buttonRun').value = 'Run';
@@ -539,11 +542,11 @@ var GOL = {
             url = (window.location.href.indexOf('?') === -1) ? window.location.href : window.location.href.slice(0, window.location.href.indexOf('?'));
 
             params = '?autoplay=0' +
-            '&trail=' + (GOL.trail.current ? '1' : '0') +
-            '&grid=' + (GOL.grid.current + 1) +
-            '&colors=' + (GOL.colors.current + 1) +
-            '&zoom=' + (GOL.zoom.current + 1) +
-            '&s=['+ cellState +']';
+              '&trail=' + (GOL.trail.current ? '1' : '0') +
+              '&grid=' + (GOL.grid.current + 1) +
+              '&colors=' + (GOL.colors.current + 1) +
+              '&zoom=' + (GOL.zoom.current + 1) +
+              '&s=['+ cellState +']';
 
             document.getElementById('exportUrlLink').href = params;
             document.getElementById('exportTinyUrlLink').href = 'http://tinyurl.com/api-create.php?url='+ url + params;
@@ -552,7 +555,7 @@ var GOL = {
         }
 
       }
-    
+
     },
 
 
@@ -665,7 +668,7 @@ var GOL = {
        * drawCell
        */
       drawCell : function (i, j, alive) {
-                
+
         if (alive) {
 
           if (this.age[i][j] > -1)
@@ -680,7 +683,7 @@ var GOL = {
         }
 
         this.context.fillRect(this.cellSpace + (this.cellSpace * i) + (this.cellSize * i), this.cellSpace + (this.cellSpace * j) + (this.cellSize * j), this.cellSize, this.cellSize);
-                
+
       },
 
 
@@ -752,33 +755,33 @@ var GOL = {
 
       /**
        *
-	NOTE: The following code is slower than the used one.
-	
-	(...)
-	
-	if (allDeadNeighbours[key] === undefined) {
-	  allDeadNeighbours[key] = {
-			x: deadNeighbours[m][0],
-			y: deadNeighbours[m][1],
-			i: 1
-		};
-	} else {
-	  allDeadNeighbours[key].i++;
-	}
-	
-	(...)
-			
-	// Process dead neighbours
-	for (key in allDeadNeighbours) {
-	  
-	  if (allDeadNeighbours[key].i === 3) { // Add new Cell
-		
-		this.addCell(allDeadNeighbours[key].x, allDeadNeighbours[key].y, newState);
-		alive++;
-		this.redrawList.push([allDeadNeighbours[key].x, allDeadNeighbours[key].y, 1]);
-	  }
-	}
-	*/
+NOTE: The following code is slower than the used one.
+
+(...)
+
+if (allDeadNeighbours[key] === undefined) {
+allDeadNeighbours[key] = {
+x: deadNeighbours[m][0],
+y: deadNeighbours[m][1],
+i: 1
+};
+} else {
+allDeadNeighbours[key].i++;
+}
+
+(...)
+
+      // Process dead neighbours
+      for (key in allDeadNeighbours) {
+
+      if (allDeadNeighbours[key].i === 3) { // Add new Cell
+
+      this.addCell(allDeadNeighbours[key].x, allDeadNeighbours[key].y, newState);
+      alive++;
+      this.redrawList.push([allDeadNeighbours[key].x, allDeadNeighbours[key].y, 1]);
+      }
+      }
+      */
       nextGeneration : function() {
         var x, y, i, j, m, n, key, t1, t2, alive = 0, neighbours, deadNeighbours, allDeadNeighbours = {}, newState = [];
         this.redrawList = [];
@@ -786,7 +789,7 @@ var GOL = {
         for (i = 0; i < this.actualState.length; i++) {
           this.topPointer = 1;
           this.bottomPointer = 1;
-                    
+
           for (j = 1; j < this.actualState[i].length; j++) {
             x = this.actualState[i][j];
             y = this.actualState[i][0];
@@ -801,7 +804,7 @@ var GOL = {
             for (m = 0; m < 8; m++) {
               if (deadNeighbours[m] !== undefined) {
                 key = deadNeighbours[m][0] + ',' + deadNeighbours[m][1]; // Create hashtable key
-                
+
                 if (allDeadNeighbours[key] === undefined) {
                   allDeadNeighbours[key] = 1;
                 } else {
@@ -826,7 +829,7 @@ var GOL = {
             key = key.split(',');
             t1 = parseInt(key[0], 10);
             t2 = parseInt(key[1], 10);
-			
+
             this.addCell(t1, t2, newState);
             alive++;
             this.redrawList.push([t1, t2, 1]);
@@ -844,8 +847,8 @@ var GOL = {
       bottomPointer : 1,
 
       /**
-             *
-             */
+       *
+       */
       getNeighboursFromAlive : function (x, y, i, possibleNeighboursList) {
         var neighbours = 0, k;
 
@@ -876,7 +879,7 @@ var GOL = {
                   } else {
                     this.topPointer = k - 1;
                   }
-                                    
+
                   neighbours++;
                 }
 
@@ -887,7 +890,7 @@ var GOL = {
             }
           }
         }
-        
+
         // Middle
         for (k = 1; k < this.actualState[i].length; k++) {
           if (this.actualState[i][k] >= (x - 1)) {
@@ -928,7 +931,7 @@ var GOL = {
 
                 if (this.actualState[i+1][k] === (x + 1)) {
                   possibleNeighboursList[7] = undefined;
-                                    
+
                   if (k == 1) {
                     this.bottomPointer = 1;
                   } else {
@@ -945,7 +948,7 @@ var GOL = {
             }
           }
         }
-		
+
         return neighbours;
       },
 
@@ -955,7 +958,7 @@ var GOL = {
        */
       isAlive : function(x, y) {
         var i, j;
-      
+
         for (i = 0; i < this.actualState.length; i++) {
           if (this.actualState[i][0] === y) {
             for (j = 1; j < this.actualState[i].length; j++) {
@@ -974,7 +977,7 @@ var GOL = {
        */
       removeCell : function(x, y, state) {
         var i, j;
-      
+
         for (i = 0; i < state.length; i++) {
           if (state[i][0] === y) {
 
@@ -1075,7 +1078,7 @@ var GOL = {
       /**
        * Pauses simulation for a bit
        */
-      
+
       sleep : function(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       },
@@ -1094,7 +1097,7 @@ var GOL = {
       getUrlParameter : function(name) {
         if (this.urlParameters === null) { // Cache miss
           var hash, hashes, i;
-        
+
           this.urlParameters = [];
           hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
 
@@ -1133,7 +1136,7 @@ var GOL = {
         if (!event) {
           event = window.event;
         }
-      
+
         if (event.pageX || event.pageY) 	{
           posx = event.pageX;
           posy = event.pageY;
@@ -1158,6 +1161,27 @@ var GOL = {
 
         return [x, y];
       }
+    },
+
+    addNewPattern: function(patternMessage) {
+      var testStr = "↵";
+      var msgArray = patternMessage.split(/\s/);
+
+      var i, j;
+      var rowOffset = Math.floor(Math.random() * this.rows - msgArray[0].length);
+      var colOffset = Math.floor(Math.random() * this.columns - msgArray.length);
+
+      console.log(rowOffset);
+      console.log(colOffset);
+
+      for (i = 0; i < msgArray.length; i += 1) {
+        for (j = 0; j < msgArray[i].length; j += 1) {
+          if (msgArray[i].charAt(j) === '1') {
+            console.log("Switching " + i + "," + j);
+            this.canvas.switchCell(j + colOffset, i + rowOffset);
+          }
+        }
+      }
     }
 
   };
@@ -1169,3 +1193,6 @@ var GOL = {
   GOL.helpers.registerEvent(window, 'load', function () {
     GOL.init();
   }, false);
+
+  socket.on('addPattern', (patternMessage) => GOL.addNewPattern(patternMessage));
+// }());
