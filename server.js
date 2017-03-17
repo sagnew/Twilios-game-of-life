@@ -40,15 +40,14 @@ app.post('/sms', (req, res) => {
 
   // Generate a TwiML response
   var twiml = new twilio.TwimlResponse();
-  var msgBody = req.body.Body.trim();
+  var msgBody = req.body.Body.trim().toLowerCase();
 
-  // Talk in a robot voice over the phone.
-  twiml.message('Thanks for playing.');
-
-
-  // if (msgBody) {
+  if (msgBody === 'start') {
+    twiml.message("This is an interactive version of Conway's Game of Life. Text a binary matrix of 1's and 0's to add patterns to the board.\n\nFor example, to add a 'Glider', text:\n\n010\n001\n111\n\nFor more info, visit: https://en.wikipedia.org/wiki/Conway's_Game_of_Life");
+  } else {
+    twiml.message('Thanks for playing! Use promo code "$BASHNY" for 20% off of your SIGNAL ticket :)');
     io.emit('addPattern', msgBody);
-  // }
+  }
 
   // Set the response type as XML.
   res.header('Content-Type', 'text/xml');
