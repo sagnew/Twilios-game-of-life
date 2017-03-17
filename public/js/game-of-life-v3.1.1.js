@@ -87,8 +87,8 @@
       schemes : [
         // { columns : 100, rows : 48, cellSize : 8 },
         {
-          columns : 180,
-          rows : 86,
+          columns : 280,
+          rows : 126,
           cellSize : 4
         },
 

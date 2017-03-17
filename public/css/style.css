@@ -15,7 +15,6 @@ body {
 
 h1 {
   font-weight: bold;
-  color: pink;
 }
 
 .bold {
@@ -79,4 +78,10 @@ footer > a {
 
 .nicejob {
   text-decoration: line-through;
+}
+
+#short-code {
+    color: red;
+    height: 100%;
+    font-size: 60px;
 }
