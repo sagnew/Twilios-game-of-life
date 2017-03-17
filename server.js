@@ -45,7 +45,7 @@ app.post('/sms', (req, res) => {
   if (msgBody === 'start') {
     twiml.message("This is an interactive version of Conway's Game of Life. Text a binary matrix of 1's and 0's to add patterns to the board.\n\nFor example, to add a 'Glider', text:\n\n010\n001\n111\n\nFor more info, visit: https://en.wikipedia.org/wiki/Conway's_Game_of_Life");
   } else {
-    twiml.message('Thanks for playing! Use promo code "$BASHNY" for 20% off of your SIGNAL ticket :)');
+    twiml.message('Thanks for playing! Use promo code "$bashny" for 20% off of your SIGNAL ticket :)\nhttps://www.twilio.com/signal');
     io.emit('addPattern', msgBody);
   }
 
